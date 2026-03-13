@@ -4,18 +4,15 @@ import plotly.express as px
 
 # 1. Configuración de la página
 st.set_page_config(
-    page_title="Ruta Mar - Planeación Ruta 3 Rancho Viejo",
+    page_title="Planeación Ruta 3 - Rancho Viejo",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
-# Título centrado
-st.markdown(
-    "<h1 style='text-align: center; color:#FF4DA6;'>🌴 Ruta Mar - Planeación Ruta 3 Rancho Viejo</h1>",
-    unsafe_allow_html=True
-)
+# Título centrado fijo
+st.markdown("<h1 style='text-align: center; color:#FF4DA6;'>🌴 Ruta 3 - Planeación Rancho Viejo</h1>", unsafe_allow_html=True)
 
-# 2. Cargar datos
+# 2. Cargar datos (Solo el de la encuesta)
 try:
     df = pd.read_csv("Rancho_Viejo_RutaMar.csv")
     
@@ -86,7 +83,7 @@ st.plotly_chart(fig_paraderos, use_container_width=True)
 # ===================== HORARIOS (ORDENADOS) =====================
 st.subheader("⏰ Horarios preferidos")
 
-# Preparar datos categóricos
+# Convertir a Categorical para asegurar orden cronológico
 ida_exp_cat = pd.Categorical(ida_exp, categories=orden_ida, ordered=True)
 regreso_exp_cat = pd.Categorical(regreso_exp, categories=orden_regreso, ordered=True)
 
@@ -123,9 +120,8 @@ fig_pie = px.pie(
     values=aceptacion_counts.values, 
     color_discrete_sequence=px.colors.qualitative.Set3
 )
-# En el pie chart no hay ejes, pero podemos mejorar el nombre del hover
 fig_pie.update_traces(textinfo='percent+label')
 st.plotly_chart(fig_pie, use_container_width=True)
 
 st.markdown("---")
-st.markdown("<h3 style='text-align: center; color:#005B96;'>Dashboard de Planeación - Ruta 3 Rancho Viejo</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color:#005B96;'>Ruta 3 - Planeación Rancho Viejo</h3>", unsafe_allow_html=True)
