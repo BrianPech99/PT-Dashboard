@@ -36,31 +36,40 @@ try:
 
     st.markdown("---")
 
-    # ===================== GRÁFICAS DE OPERACIÓN =====================
-    col_left, col_right = st.columns(2)
+    # ===================== CRECIMIENTO HISTÓRICO POR RUTA =====================
+    st.subheader("📈 Crecimiento Histórico por Ruta")
+    col_ruta1, col_ruta2 = st.columns(2)
 
-    with col_left:
-        # Gráfica 1: Crecimiento por Edición
-        st.subheader("📈 Crecimiento Histórico")
-        edicion_data = df_op.groupby("edicion")["personas_subieron"].sum().reindex(orden_ediciones).reset_index()
-        fig_line = px.line(
-            edicion_data, x="edicion", y="personas_subieron", 
+    # Lógica para Ruta 1
+    with col_ruta1:
+        st.markdown("<h4 style='text-align: center;'>Ruta 1</h4>", unsafe_allow_html=True)
+        data_r1 = df_op[df_op['ruta'] == 'Ruta 1'].groupby("edicion")["personas_subieron"].sum().reindex(orden_ediciones).reset_index()
+        fig_r1 = px.line(
+            data_r1, x="edicion", y="personas_subieron", 
             markers=True, line_shape="spline",
-            labels={'edicion': 'Edición del Programa', 'personas_subieron': 'Pasajeros'},
+            labels={'edicion': 'Edición', 'personas_subieron': 'Pasajeros'},
             color_discrete_sequence=["#005B96"]
         )
-        st.plotly_chart(fig_line, use_container_width=True)
+        st.plotly_chart(fig_r1, use_container_width=True)
 
-        # Gráfica 2: Distribución por Ruta
-        st.subheader("🚌 Uso por Ruta")
-        ruta_data = df_op.groupby("ruta")["personas_subieron"].sum()
-        fig_pie = px.pie(
-            values=ruta_data.values, names=ruta_data.index,
-            hole=0.4, color_discrete_sequence=px.colors.qualitative.Pastel
+    # Lógica para Ruta 2
+    with col_ruta2:
+        st.markdown("<h4 style='text-align: center;'>Ruta 2</h4>", unsafe_allow_html=True)
+        data_r2 = df_op[df_op['ruta'] == 'Ruta 2'].groupby("edicion")["personas_subieron"].sum().reindex(orden_ediciones).reset_index()
+        fig_r2 = px.line(
+            data_r2, x="edicion", y="personas_subieron", 
+            markers=True, line_shape="spline",
+            labels={'edicion': 'Edición', 'personas_subieron': 'Pasajeros'},
+            color_discrete_sequence=["#FF4DA6"] # Color distinto para diferenciar
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_r2, use_container_width=True)
 
-    with col_right:
+    st.markdown("---")
+
+    # ===================== OTROS ANÁLISIS =====================
+    col_bot_left, col_bot_right = st.columns(2)
+
+    with col_bot_left:
         # Gráfica 3: Top Paraderos con más subidas
         st.subheader("📍 Paraderos con mayor demanda (Subidas)")
         paraderos_data = df_op.groupby("paradero")["personas_subieron"].sum().sort_values(ascending=True).tail(12)
@@ -72,9 +81,15 @@ try:
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
+    with col_bot_right:
         # Gráfica 4: Comparativa Día de la Semana
         st.subheader("🗓️ Demanda por Día")
-        dia_data = df_op.groupby("dia_semana")["personas_subieron"].sum()
+        # Ordenar días de la semana
+        orden_dias = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        # Limpieza de espacios en blanco en la columna dia_semana si existen
+        df_op['dia_semana'] = df_op['dia_semana'].str.strip()
+        dia_data = df_op.groupby("dia_semana")["personas_subieron"].sum().reindex(orden_dias)
+        
         fig_dia = px.bar(
             dia_data, x=dia_data.index, y=dia_data.values,
             color=dia_data.index, color_discrete_sequence=px.colors.qualitative.Set2,
