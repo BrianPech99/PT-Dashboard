@@ -40,28 +40,36 @@ try:
     st.subheader("📈 Crecimiento Histórico por Ruta")
     col_ruta1, col_ruta2 = st.columns(2)
 
-    # Lógica para Ruta 1
+# --- COLUMNA IZQUIERDA: RUTA 1 ---
     with col_ruta1:
-        st.markdown("<h4 style='text-align: center;'>Ruta 1</h4>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; color:#005B96;'>Ruta 1</h3>", unsafe_allow_html=True)
         data_r1 = df_op[df_op['ruta'] == 'Ruta 1'].groupby("edicion")["personas_subieron"].sum().reindex(orden_ediciones).reset_index()
-        fig_r1 = px.line(
-            data_r1, x="edicion", y="personas_subieron", 
-            markers=True, line_shape="spline",
-            labels={'edicion': 'Edición', 'personas_subieron': 'Pasajeros'},
-            color_discrete_sequence=["#005B96"]
-        )
+        
+        fig_r1 = px.line(data_r1, x="edicion", y="personas_subieron", 
+                         markers=True, 
+                         line_shape="spline",
+                         text="personas_subieron", # Agregamos el texto
+                         title="Pasajeros por Edición R1", 
+                         color_discrete_sequence=["#005B96"])
+        
+        # Ajustamos la posición del texto para que no estorbe al punto
+        fig_r1.update_traces(textposition="top center")
         st.plotly_chart(fig_r1, use_container_width=True)
 
-    # Lógica para Ruta 2
+    # --- COLUMNA DERECHA: RUTA 2 ---
     with col_ruta2:
-        st.markdown("<h4 style='text-align: center;'>Ruta 2</h4>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; color:#FF4DA6;'>Ruta 2</h3>", unsafe_allow_html=True)
         data_r2 = df_op[df_op['ruta'] == 'Ruta 2'].groupby("edicion")["personas_subieron"].sum().reindex(orden_ediciones).reset_index()
-        fig_r2 = px.line(
-            data_r2, x="edicion", y="personas_subieron", 
-            markers=True, line_shape="spline",
-            labels={'edicion': 'Edición', 'personas_subieron': 'Pasajeros'},
-            color_discrete_sequence=["#FF4DA6"] # Color distinto para diferenciar
-        )
+        
+        fig_r2 = px.line(data_r2, x="edicion", y="personas_subieron", 
+                         markers=True, 
+                         line_shape="spline",
+                         text="personas_subieron", # Agregamos el texto
+                         title="Pasajeros por Edición R2", 
+                         color_discrete_sequence=["#FF4DA6"])
+        
+        # Ajustamos la posición del texto para que no estorbe al punto
+        fig_r2.update_traces(textposition="top center")
         st.plotly_chart(fig_r2, use_container_width=True)
 
     st.markdown("---")
